@@ -148,6 +148,16 @@ echo "User: ${DB_USER}"
 echo "Port: ${DB_PORT}"
 echo ""
 
+# Apply application schema + seed data (idempotent).
+# This follows the container convention that startup.sh is the init entrypoint.
+if [ -f "./init_schema.sh" ]; then
+    echo "Applying event planner schema + seed data..."
+    chmod +x ./init_schema.sh
+    ./init_schema.sh
+else
+    echo "⚠ init_schema.sh not found; skipping schema initialization"
+fi
+
 echo "Environment variables saved to db_visualizer/postgres.env"
 echo "To use with Node.js viewer, run: source db_visualizer/postgres.env"
 
